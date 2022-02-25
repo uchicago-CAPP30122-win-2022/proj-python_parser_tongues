@@ -71,7 +71,7 @@ def get_to_pd(limit): # Returns all variables
     return pd.DataFrame.from_dict(dic)
 
 
-def to_csv(output_filename, limit):
+def get_to_csv(output_filename, limit):
     '''
     Connects to CDC Data Portal and extracts vaccine data into a csv file.
     Input:
@@ -81,7 +81,6 @@ def to_csv(output_filename, limit):
 
     client = Socrata("data.cdc.gov", "smYunORlSM3IrVMYZLiu6jfav") #Connection to CDC portal
     results = client.get("unsk-b7fc",limit=limit) #Get list of dicts(each row is a dict)
-    data = {}
     weeks = set()
     dates = set()
     
