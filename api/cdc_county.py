@@ -5,7 +5,7 @@ import csv
 def get_vax_data(output_filename, limit=3200):
     '''
     Connects to CDC Data Portal and extracts vaccine data into a csv file.
-    Limit set to default of 3200 to get data from all 3006 counties in the US.
+    Limit set to default of 3200 to retrieve data from all 3006 counties in the US.
     Input:
         (str): csv file name 
         (int): limit of data to retrieve
