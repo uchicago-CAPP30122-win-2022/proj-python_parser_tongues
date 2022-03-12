@@ -5,7 +5,7 @@ import csv
 def get_vax_data(output_filename, limit=3200):
     '''
     Connects to CDC Data Portal and extracts vaccine data into a csv file.
-    Limit set to default of 3200 to retrieve data from all 3006 counties in the US.
+    Limit set to default of 3500 to retrieve data from all counties in the US.
     Input:
         (str): csv file name 
         (int): limit of data to retrieve
@@ -23,7 +23,7 @@ def get_vax_data(output_filename, limit=3200):
          "Metro Status"])
 
         for row in results:
-            if row["mmwr_week"] == latest_week and row["date"][8:10] == latest_date:
+            if int(row["mmwr_week"]) == latest_week and int(row["date"][8:10]) == latest_date:
                 fips = row["fips"]
                 state = row["recip_state"]
                 county = row["recip_county"]
@@ -68,14 +68,13 @@ def find_recent_date (results):
     Output:
         (tuple): latest week, latest date
     '''
-    weeks = set()
-    dates = set()
+    latest_week = 0
+    latest_date = 0
 
     for row in results:
-        weeks.add(row["mmwr_week"])
-        dates.add(row["date"][8:10])
-    
-    latest_week = max(weeks)
-    latest_date = max(dates)
+        if int(row["mmwr_week"]) > latest_week:
+            latest_week = int(row["mmwr_week"])
+        if int(row["date"][8:10]) > latest_date:
+            latest_date = int(row["date"][8:10])
 
     return latest_week, latest_date
