@@ -13,8 +13,7 @@ def get_vax_data(output_filename, limit=3200):
 
     client = Socrata("data.cdc.gov", "smYunORlSM3IrVMYZLiu6jfav") #Connection to CDC portal
     results = client.get("8xkx-amqh",limit=limit) #Get list of dicts(each row is a dict)
-    weeks = set()
-    dates = set()
+    latest_week, latest_date = find_recent_date (results)
     
     with open(output_filename, "w") as csvfile:
         vax_data = csv.writer(csvfile, delimiter = ",")
@@ -22,17 +21,9 @@ def get_vax_data(output_filename, limit=3200):
         "Completeness Percent", "Complete 18 Plus Percent", "Complete 65 Plus Percent",
          "Booster Percent", "Booster 18 Plus Percent", "Booster 65 Plus Percent", "SVI", 
          "Metro Status"])
-        
-        #Retrieve only most recent data by mmwrk week and date
-        for row in results:
-            weeks.add(row["mmwr_week"])
-            dates.add(row["date"][8:10])
- 
-        latest_week = max(weeks)
-        recent_date = max(dates)
 
         for row in results:
-            if row["mmwr_week"] == latest_week and row["date"][8:10] == recent_date:
+            if row["mmwr_week"] == latest_week and row["date"][8:10] == latest_date:
                 fips = row["fips"]
                 state = row["recip_state"]
                 county = row["recip_county"]
@@ -66,3 +57,25 @@ def get_vax_data(output_filename, limit=3200):
                 vax_data.writerow([fips, state, county, day, month, year, week, complete_pct, 
                 complete_18plus_pct,complete_65plus_pct, booster_pct, booster_18plus_pct, 
                 booster_65plus_pct, svi, metro_status]) 
+
+
+def find_recent_date (results):
+    '''
+    Finds the most recent week and date of available data in the 
+    CDC API.
+    Input:
+        (lst): list of dictionaries
+    Output:
+        (tuple): latest week, latest date
+    '''
+    weeks = set()
+    dates = set()
+
+    for row in results:
+        weeks.add(row["mmwr_week"])
+        dates.add(row["date"][8:10])
+    
+    latest_week = max(weeks)
+    latest_date = max(dates)
+
+    return latest_week, latest_date
