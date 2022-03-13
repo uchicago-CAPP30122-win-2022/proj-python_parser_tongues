@@ -20,12 +20,15 @@ elect_data = pd.read_csv("ken_test.csv")
 elect_data["FIPS"] = elect_data["County"]
 for county in fips_classifier:
     elect_data["FIPS"] = np.where((elect_data.FIPS == county),fips_classifier[county],elect_data.FIPS)
-  
+
+
 #Merge datasets
 # Generates 4444 rows
 df_2 = pd.merge(vax_data, elect_data, how='inner', on = "FIPS")
+df_2 = df_2.rename(columns={"State_x":"State","County_x":"County"})
 # Generates 2961 rows
 df_3 = pd.merge(vax_data, elect_data, how='left', on = "FIPS")
+df_3 = df_3.rename(columns={"State_x":"State","County_x":"County"})
 
 #Convert to csv
 df_2.to_csv('merged_data.csv')
