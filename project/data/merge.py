@@ -21,6 +21,7 @@ elect_data["FIPS"] = elect_data["County"]
 for fips, (state, county) in fips_classifier.items():
     #elect_data["FIPS"] = np.where((elect_data.State == state) & (elect_data.County == county), fips, elect_data.FIPS)
     elect_data["FIPS"] = np.where((elect_data["State"] == state) & (elect_data["County"] == county), fips, elect_data["FIPS"])
+elect_data = elect_data.drop(columns=["State", "County"])
 
 
 #Merge datasets
