@@ -1,4 +1,4 @@
-,FIPS,State_x,County_x,Day,Month,Year,Week,Completeness Percent,Complete 18 Plus Percent,Complete 65 Plus Percent,Booster Percent,Booster 18 Plus Percent,Booster 65 Plus Percent,SVI,Metro Status,State_y,County_y,Biden Vote %,Trump Vote %,Other Vote %
+,FIPS,State,County,Day,Month,Year,Week,Completeness Percent,Complete 18 Plus Percent,Complete 65 Plus Percent,Booster Percent,Booster 18 Plus Percent,Booster 65 Plus Percent,SVI,Metro Status,State_y,County_y,Biden Vote %,Trump Vote %,Other Vote %
 0,12027,FL,DeSoto County,12,3,2022,10,98.6,52.8,73.3,30.5,32.2,50.8,D,0.0,Florida,DeSoto,33.6,65.6,0.8
 1,12027,FL,DeSoto County,12,3,2022,10,98.6,52.8,73.3,30.5,32.2,50.8,D,0.0,Mississippi,DeSoto,37.1,61.0,1.9
 2,21213,KY,Simpson County,12,3,2022,10,94.0,61.3,86.2,42.6,45.1,66.2,B,0.0,Kentucky,Simpson,30.7,67.4,1.9
