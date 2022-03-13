@@ -8,4 +8,6 @@ data -- contains the project's data:
 
 api -- code to extract data from CDC API
 
+past_deliverables -- includes deliverables 1 and 2
+
 README.md -- this file
