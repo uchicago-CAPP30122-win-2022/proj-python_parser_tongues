@@ -6,4 +6,6 @@ data -- contains the project's data:
     - vaccine data from CDC API
     - election data scraped online
 
+api -- code to extract data from CDC API
+
 README.md -- this file
