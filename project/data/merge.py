@@ -13,6 +13,7 @@ for _, row in df_fips.iterrows():
 c.get_vax_data("cdc_data.csv")
 vax_data = pd.read_csv("cdc_data.csv")
 
+
 #Retrieve election data
 elect_data = pd.read_csv("ken_test.csv")
 #Add FIPS code to facilitate merging
