@@ -18,8 +18,8 @@ elect_data = pd.read_csv("ken_test.csv")
 #Add FIPS code to facilitate merging
 elect_data["FIPS"] = elect_data["County"]
 for fips, (state, county) in fips_classifier.items():
-    elect_data["FIPS"] = np.where((elect_data["State"] == state) & (elect_data["County"] == county), fips, 
-    elect_data["FIPS"])
+    elect_data["FIPS"] = np.where((elect_data["State"] == state) & (elect_data["County"] == county),
+    fips, elect_data["FIPS"])
 elect_data = elect_data.drop(columns=["State", "County"])
 
 #Merge datasets
