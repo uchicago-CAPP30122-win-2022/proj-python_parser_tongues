@@ -1,3 +1,4 @@
+from distutils.command.clean import clean
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 import numpy as np
@@ -21,7 +22,7 @@ def regress(regression_cols, dependent_col, filename="data/data.csv"):
     cleaned_data = all_data.dropna()
     enc = OneHotEncoder()
     svi_dummies = pd.get_dummies(cleaned_data['SVI'])
-
+    # cleaned_data = cleaned_data.transform(np.log )
     cleaned_data = pd.concat([cleaned_data, svi_dummies], axis=1)
     model = LinearRegression().fit(cleaned_data[regression_cols], cleaned_data[dependent_col])
     rv = model.coef_
@@ -30,7 +31,7 @@ def regress(regression_cols, dependent_col, filename="data/data.csv"):
     return model.intercept_, rv
 
 regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
-dependent_col = ['Completeness Percent']
+dependent_col = ['Complete 18 Plus Percent']
 data = "data/data.csv"
 print(regress(regression_cols, dependent_col, data))
 
