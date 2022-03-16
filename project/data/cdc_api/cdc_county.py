@@ -13,14 +13,14 @@ def get_vax_data(output_filename, limit=3200):
 
     client = Socrata("data.cdc.gov", "smYunORlSM3IrVMYZLiu6jfav") #Connection to CDC portal
     results = client.get("8xkx-amqh",limit=limit) #Get list of dicts(each row is a dict)
-    latest_week, latest_date = find_recent_date (results)
+    latest_week, latest_date = find_recent_date(results)
     
     with open(output_filename, "w") as csvfile:
         vax_data = csv.writer(csvfile, delimiter = ",")
         vax_data.writerow(["FIPS", "State", "County", "Day",  "Month", "Year", "Week", 
         "Completeness Percent", "Complete 18 Plus Percent", "Complete 65 Plus Percent",
          "Booster Percent", "Booster 18 Plus Percent", "Booster 65 Plus Percent", "SVI", 
-         "Metro Status"])
+         "Metro Status", "Population", "Population 18 Plus", "Population 65 Plus"])
 
         for row in results:
             if int(row["mmwr_week"]) == latest_week and int(row["date"][8:10]) == latest_date:
@@ -51,15 +51,30 @@ def get_vax_data(output_filename, limit=3200):
                 else:
                     svi = None
                 if "metro_status" in row:
-                    metro_status = row["metro_status"]
+                    if row["metro_status"] == "Metro":
+                        metro_status = 1
+                    else:
+                        metro_status = 0
                 else:
                     metro_status = None
+                if "census2019" in row:
+                    pop = row["census2019"]
+                else:
+                    pop = None
+                if "census2019_18pluspop" in row:
+                    pop_18plus = row["census2019_18pluspop"]
+                else:
+                    pop_18plus = None
+                if "census2019_65pluspop" in row:
+                    pop_65plus = row["census2019_65pluspop"]
+                else:
+                     pop_65plus = None
                 vax_data.writerow([fips, state, county, day, month, year, week, complete_pct, 
                 complete_18plus_pct,complete_65plus_pct, booster_pct, booster_18plus_pct, 
-                booster_65plus_pct, svi, metro_status]) 
+                booster_65plus_pct, svi, metro_status, pop, pop_18plus, pop_65plus]) 
 
 
-def find_recent_date (results):
+def find_recent_date(results):
     '''
     Finds the most recent week and date of available data in the 
     CDC API.
@@ -68,6 +83,7 @@ def find_recent_date (results):
     Output:
         (tuple): latest week, latest date
     '''
+
     latest_week = 0
     latest_date = 0
 
