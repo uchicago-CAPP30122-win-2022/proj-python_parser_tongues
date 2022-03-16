@@ -13,9 +13,8 @@ for _, row in df_fips.iterrows():
 c.get_vax_data("cdc_data.csv")
 vax_data = pd.read_csv("cdc_data.csv", dtype=str)
 
-
 #Retrieve election data
-elect_data = pd.read_csv("election_results.csv")
+elect_data = pd.read_csv("election_results.csv",dtype=str)
 #Add FIPS code to facilitate merging
 elect_data["FIPS"] = elect_data["County"]
 for fips, (state, county) in fips_classifier.items():
