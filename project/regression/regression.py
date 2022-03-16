@@ -10,7 +10,7 @@ Stefan Manuel
 
 '''
 
-def regress(regression_cols, dependent_col, filename):
+def regress(regression_cols, dependent_col, filename="data/data.csv"):
     ''''
     Assuming control and regressor filesets are both organized buy county fips code, performs a join on them 
     '''
@@ -20,14 +20,18 @@ def regress(regression_cols, dependent_col, filename):
     
     cleaned_data = all_data.dropna()
     enc = OneHotEncoder()
-    # cleaned_data = enc.fit_transform(cleaned_data)
-    # cleaned_data.to_csv('temp_data.csv')
-    model = LinearRegression().fit(cleaned_data[regression_cols], cleaned_data[dependent_col])
-    return model.intercept_, model.coef_
+    svi_dummies = pd.get_dummies(cleaned_data['SVI'])
 
-regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'UNEMP', 'Population', "Metro Status" ]
+    cleaned_data = pd.concat([cleaned_data, svi_dummies], axis=1)
+    model = LinearRegression().fit(cleaned_data[regression_cols], cleaned_data[dependent_col])
+    rv = model.coef_
+    rv = pd.DataFrame(data = rv, columns = regression_cols)
+
+    return model.intercept_, rv
+
+regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
 dependent_col = ['Completeness Percent']
-data = "proj-python_parser_tongues/project/data/data.csv"
+data = "data/data.csv"
 print(regress(regression_cols, dependent_col, data))
 
 
