@@ -27,13 +27,13 @@ def regress(regression_cols, dependent_col, filename="data/data.csv"):
     rv = model.coef_
     rv = pd.DataFrame(data = rv, columns = regression_cols)
 
-    return model1.summary(),rv
+    return model1.summary(),rv, model1.predict()
 
 
 regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
 dependent_col = ['Completeness Percent']
 data = "data/data.csv"
-#print(regress(regression_cols, dependent_col, data))
+print(regress(regression_cols, dependent_col, data))
 
 
 
