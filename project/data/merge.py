@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from cdc_api import cdc_county as c
 
 # Build FIPS classifier to categorize counties
 df_fips = pd.read_csv("data/fips_codes.csv",dtype=str)
@@ -10,7 +9,6 @@ for _, row in df_fips.iterrows():
         fips_classifier[row["FIPS"]] = (row["State"], row["County"])
 
 #Retrieve CDC data from API
-c.get_vax_data("cdc_data.csv")
 vax_data = pd.read_csv("data/cdc_data.csv", dtype=str)
 
 #Retrieve election data
