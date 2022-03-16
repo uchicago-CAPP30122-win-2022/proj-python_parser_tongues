@@ -14,7 +14,7 @@ c.get_vax_data("cdc_data.csv")
 vax_data = pd.read_csv("cdc_data.csv", dtype=str)
 
 #Retrieve election data
-elect_data = pd.read_csv("2020_election_results.csv",dtype=str)
+elect_data = pd.read_csv("2020_election_results.csv",dtype=str).rename(columns={"Biden Vote %": "DEM", "Trump Vote %": "REP", "Was Winner Democrat?": "DEM_WON"})
 
 #Add FIPS code to facilitate merging
 elect_data["FIPS"] = elect_data["County"]
