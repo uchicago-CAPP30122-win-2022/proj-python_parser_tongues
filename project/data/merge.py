@@ -23,7 +23,7 @@ for fips, (state, county) in fips_classifier.items():
 elect_data = elect_data.drop(columns=["State", "County"])
 
 # Retrieve controls dataset
-controls = pd.read_csv("CONTROLS.csv", dtype=str).drop(columns=["POP", "Unnamed: 4"])
+controls = pd.read_csv("controls.csv", dtype=str).drop(columns=["POP", "Unnamed: 4"])
 controls["INCOME"] = controls["INCOME"].str.replace(',','')
 
 #Merge datasets
