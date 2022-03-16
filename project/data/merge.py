@@ -10,7 +10,7 @@ for _, row in df_fips.iterrows():
         fips_classifier[row["FIPS"]] = (row["State"], row["County"])
 
 #Retrieve CDC data from API
-c.get_vax_data("data/cdc_data.csv")
+c.get_vax_data("cdc_data.csv")
 vax_data = pd.read_csv("data/cdc_data.csv", dtype=str)
 
 #Retrieve election data
