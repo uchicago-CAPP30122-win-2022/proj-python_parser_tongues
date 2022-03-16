@@ -27,6 +27,7 @@ elect_data = elect_data.drop(columns=["State", "County"])
 # Left Merge
 df = pd.merge(vax_data, elect_data, how='left', on = "FIPS")
 df = df.rename(columns={"State_x":"State","County_x":"County"}).sort_values("FIPS")
+df.drop(df[df["FIPS"] == "UNK"].index, inplace = True) # Drop observations with unknown FIPS codes
 
 #Convert merged df's to csv
 df.to_csv('data.csv')
