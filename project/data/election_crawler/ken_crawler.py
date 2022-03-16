@@ -5,7 +5,6 @@ import csv
 import pandas as pd
 import requests
 import bs4
-import unicodedata
 
 
 dem_url = ("https://uselectionatlas.org/RESULTS/party.php?year=2020&type=national&no=1&f=1&off=0&elect=0")
@@ -89,29 +88,45 @@ def get_election_results(state_urls):
                     counties = individual_county_data_soup.div.div.find_all("table")
                     state_results = {}  # ALL OF AN INDIVIDUAL STATE'S RESULTS BY COUNTY
                     for county in counties:
-                        county_name = county.b.text  # might need to add a +"County" to this depending on how others are pulling data
-                        county_results = {}  # ALL OF AN INDIVIDUAL COUNTY'S RESULTS BY CANDIDATE/PERCENTAGE
-                        default_perc = 0.0
-                        for i, result in enumerate(county.tbody.find_all("tr")):
-                            if i == 0:  # Biden, needed because of the way the programmer wrote their html code
-                                cand_name = result.find_all("td", class_="cnd")[i].text
-                                cand_perc = float(result.find_all("td", class_="per")[i].text.strip("%"))
-                            else:    #all other candidates
-                                cand_name = result.td.text
-                                cand_perc = float(result.find_all("td", class_="per")[0].text.strip("%"))
-                            if cand_name == "Pierce":
-                                default_perc = cand_perc
-                            elif cand_name == "Other":
-                                county_results[cand_name] = cand_perc + default_perc
-                            else:
-                                county_results[cand_name] = cand_perc
-                        default_perc = 0.0
-                        if "Other" not in county_results:
-                            county_results["Other"] = default_perc
+                        county_name = county.b.text
+                        county_results = get_county_data(county)                      
                         state_results[county_name] = county_results
                     all_election_results[state] = state_results
                     
     return all_election_results
+
+
+def get_county_data(county):
+    '''
+    '''
+    county_results = {}  # ALL OF AN INDIVIDUAL COUNTY'S RESULTS BY CANDIDATE/PERCENTAGE
+    default_perc = 0.0
+    for i, result in enumerate(county.tbody.find_all("tr")):
+        if i == 0:  # Biden, need bc of how page is written
+            cand_name = result.find_all("td", class_="cnd")[i].text
+            cand_perc = float(result.find_all("td", class_="per")[i].text.strip("%"))
+        else:  # All other candidates
+            cand_name = result.td.text
+            cand_perc = float(result.find_all("td", class_="per")[0].text.strip("%"))
+        
+        if cand_name == "Pierce":
+            default_perc = cand_perc
+        elif cand_name == "Other":
+            county_results[cand_name] = round(cand_perc + default_perc, 1)
+        else:
+            county_results[cand_name] = cand_perc
+   
+    default_perc = 0.0
+    if "Other" not in county_results:
+        county_results["Other"] = default_perc
+    
+    county_winner = max(county_results, key=county_results.get)
+    if county_winner == "Biden":
+        county_results["Winner Dem?"] = 1
+    else:
+        county_results["Winner Dem?"] = 0
+    
+    return county_results
 
 
 # Helper just to get Soup
@@ -166,84 +181,12 @@ def write_csv(election_dict, output_filename):
     'New Castle': {'Biden': 67.8, 'Trump': 30.7, 'Other': 1.5},
     'Sussex': {'Biden': 43.8, 'Trump': 55.1, 'Other': 1.1}}}
     '''
-    #with open(filename, 'w', newline='') as open_writable_file:
-        #   writer = csv.DictWriter(open_writable_file, fieldnames=["State", "County"])
-        #writer.writeheader()  # write a row the fieldnames
-        
-        #   writer.writerow(table_data)
-
-
-   # all_data = get_party_data(url)
-
-    #data = {}
-
     with open(output_filename, "w", newline="") as csvfile:
         #elec_data = csv.DictWriter(csvfile, delimiter = ",")
         elec_data = csv.writer(csvfile, delimiter = ",")
-        elec_data.writerow(["State", "County", "Biden Vote %", "Trump Vote %", "Other Vote %"])
+        elec_data.writerow(["State", "County", "Biden Vote %", "Trump Vote %", "Other Vote %", "Was Winner Democrat?"])
 
         for state, counties in election_dict.items():
             for county, results in counties.items():                
                 elec_data = csv.writer(csvfile, delimiter=",")
-                elec_data.writerow([state, county, results["Biden"], results["Trump"], results["Other"]])
-
-
-def create_csv_file(course_map_filename, index_filename, data_to_map):
-    """
-    Create a csv file maping a json file with identifiers for courses with the
-    crawled data for each course.
-
-    Inputs:
-        course_map_filename: (str) Name of the .json file
-        index_filename: (str) Name for the .csv file for the built index.
-        data_to_map: (lst) List with all the relevant info crawled from URLs.
-    Output:
-        (.csv): File that contains the index for the crawled URLs.
-        (bool): True, if files is built successfuly.
-    """
-    #create a dictionary with the content of course_map_filename
-    course_map = JSON_to_Dict(course_map_filename)
-
-    #maps course_map dict's content with data_to_map list to create the index
-    with open(index_filename, 'w') as csv_file:
-        for item in data_to_map:
-            if item[0] in course_map.keys():
-                for word in item[1]:
-                    writer = csv.writer(csv_file, delimiter = "|")
-                    writer.writerow([course_map[item[0]], word])
-
-        csv_file.close()
-
-        if csv_file.closed:
-            return True
-
-
-def data_to_pd(dem_url, rep_url):
-    '''
-    Puts together scraped 2020 US Presidential Election data with Democrat and
-    Republican results.
-    Input:
-        (str): Democrat results url
-        (str): Republican results url
-    Output:
-        (pd DataFrame): data frame with election data
-    '''
-    
-    dem_data = get_party_data(dem_url)
-    rep_data = get_party_data(rep_url)
-
-    data = {}
-
-    for list in dem_data:
-        state = list[0]
-        if state not in data:
-            data[state] ={}
-        data[state]["Electoral Votes"] = list[1]
-        data[state]["Total Votes"] = list[2]
-        data[state]["Dem Votes"] = list[4]
-    
-    for list in rep_data:
-        state = list[0]
-        data[state]["Rep Votes"] = list[4]
-
-    return pd.DataFrame.from_dict(data).T.apply(pd.to_numeric)
+                elec_data.writerow([state, county, results["Biden"], results["Trump"], results["Other"], results["Winner Dem?"]])
