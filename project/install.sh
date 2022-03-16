@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 echo -e "Install is complete."
 
-python3 data/election_crawler/cralwer.py
+python3 data/election_crawler/crawler.py
 
 echo -e "3. Running Crawler..."
 

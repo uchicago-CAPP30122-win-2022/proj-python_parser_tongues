@@ -3,18 +3,18 @@ import numpy as np
 from cdc_api import cdc_county as c
 
 # Build FIPS classifier to categorize counties
-df_fips = pd.read_csv("fips_codes.csv",dtype=str)
+df_fips = pd.read_csv("data/fips_codes.csv",dtype=str)
 fips_classifier = {}
 for _, row in df_fips.iterrows():
     if row["County"] not in fips_classifier:
         fips_classifier[row["FIPS"]] = (row["State"], row["County"])
 
 #Retrieve CDC data from API
-c.get_vax_data("cdc_data.csv")
-vax_data = pd.read_csv("cdc_data.csv", dtype=str)
+c.get_vax_data("data/cdc_data.csv")
+vax_data = pd.read_csv("data/cdc_data.csv", dtype=str)
 
 #Retrieve election data
-elect_data = pd.read_csv("2020_election_results.csv",dtype=str).rename(columns={"Biden Vote %": "DEM", 
+elect_data = pd.read_csv("data/2020_election_results.csv",dtype=str).rename(columns={"Biden Vote %": "DEM", 
 "Trump Vote %": "REP", "Was Winner Democrat?": "DEM_WON"})
 
 #Add FIPS code to facilitate merging
@@ -25,7 +25,7 @@ for fips, (state, county) in fips_classifier.items():
 elect_data = elect_data.drop(columns=["State", "County"])
 
 # Retrieve controls dataset
-controls = pd.read_csv("controls.csv", dtype=str).drop(columns=["POP", "Unnamed: 4"])
+controls = pd.read_csv("data/controls.csv", dtype=str).drop(columns=["POP", "Unnamed: 4"])
 controls["INCOME"] = controls["INCOME"].str.replace(',','')
 
 #Merge datasets
