@@ -1,5 +1,4 @@
 from sodapy import Socrata
-import pandas as pd
 import csv
 
 
@@ -21,7 +20,7 @@ def get_vax_data(output_filename, limit=3200):
         vax_data.writerow(["FIPS", "State", "County", "Day",  "Month", "Year", "Week", 
         "Completeness Percent", "Complete 18 Plus Percent", "Complete 65 Plus Percent",
          "Booster Percent", "Booster 18 Plus Percent", "Booster 65 Plus Percent", "SVI", 
-         "Metro Status"])
+         "Metro Status", "Population", "Population 18 Plus", "Population 65 Plus"])
 
         for row in results:
             if int(row["mmwr_week"]) == latest_week and int(row["date"][8:10]) == latest_date:
@@ -58,9 +57,21 @@ def get_vax_data(output_filename, limit=3200):
                         metro_status = 0
                 else:
                     metro_status = None
+                if "census2019" in row:
+                    pop = row["census2019"]
+                else:
+                    pop = None
+                if "census2019_18pluspop" in row:
+                    pop_18plus = row["census2019_18pluspop"]
+                else:
+                    pop_18plus = None
+                if "census2019_65pluspop" in row:
+                    pop_65plus = row["census2019_65pluspop"]
+                else:
+                     pop_65plus = None
                 vax_data.writerow([fips, state, county, day, month, year, week, complete_pct, 
                 complete_18plus_pct,complete_65plus_pct, booster_pct, booster_18plus_pct, 
-                booster_65plus_pct, svi, metro_status]) 
+                booster_65plus_pct, svi, metro_status, pop, pop_18plus, pop_65plus]) 
 
 
 def find_recent_date(results):
