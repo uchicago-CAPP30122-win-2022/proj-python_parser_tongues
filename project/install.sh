@@ -33,12 +33,11 @@ cp data/data.csv regression
 python3 regression/regression.py
 
 
-
+echo -e "6. Creating Map.. "
 
 python3 visualization/map_dem_rep.py
 
 
-echo -e "6. Creating Map.. "
 
 
 
