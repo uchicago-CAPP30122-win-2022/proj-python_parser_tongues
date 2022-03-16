@@ -16,26 +16,21 @@ def regress(regression_cols, dependent_col, filename="data.csv"):
     
     all_data = pd.read_csv(filename)    
 
-    
-    cleaned_data = all_data.dropna()
-    svi_dummies = pd.get_dummies(cleaned_data['SVI'])
-    cleaned_data = pd.concat([cleaned_data, svi_dummies], axis=1)
-    model = LinearRegression(fit_intercept = False).fit(cleaned_data[regression_cols], cleaned_data[dependent_col])
-    # model1 = sm.WLS(cleaned_data[dependent_col], cleaned_data[regression_cols], weights=cleaned_data['Population']).fit()
-    model1 = sm.GLS(cleaned_data[dependent_col], cleaned_data[regression_cols]).fit()
-    rv = model.coef_
-    rv = pd.DataFrame(data = rv, columns = regression_cols)
+    svi_dummies = pd.get_dummies(all_data['SVI'])
+    all_data = pd.concat([all_data, svi_dummies], axis=1)
 
-    return model1.summary(),rv, model1.predict()
+    cleaned_data = all_data.dropna()
+    #model = LinearRegression(fit_intercept = False).fit(cleaned_data[regression_cols], cleaned_data[dependent_col])
+    model1 = sm.WLS(cleaned_data[dependent_col], cleaned_data[regression_cols], weights=cleaned_data['Population']).fit()
+    #model1 = sm.GLS(cleaned_data[dependent_col], cleaned_data[regression_cols]).fit()
+    #rv = pd.DataFrame(data = rv, columns = regression_cols)
+
+    return model1.summary(), model1.params, model1.predict(all_data[regression_cols])
 
 
 regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
 dependent_col = ['Completeness Percent']
-<<<<<<< HEAD
-data = "data/data.csv"
-=======
 data = "data.csv"
->>>>>>> af3ae65509338a9cb7cf1221c3d59773d7816663
 print(regress(regression_cols, dependent_col, data))
 
 
