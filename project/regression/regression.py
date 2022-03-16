@@ -8,6 +8,9 @@ import statsmodels.api as sm
 
 '''
 
+regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
+dependent_col = ['Completeness Percent']
+
 def regress(regression_cols, dependent_col, filename="data.csv"):
     ''''
     Assuming control and regressor filesets are both organized buy county fips code, performs a join on them 
@@ -35,7 +38,7 @@ def regress(regression_cols, dependent_col, filename="data.csv"):
 regression_cols = [ 'Was Winner Democrat?', 'UNEMP', 'INCOME', 'Population', "Metro Status", 'Population 65 Plus', 'A', 'B', 'C', 'D' ]
 dependent_col = ['Completeness Percent']
 data = "data.csv"
-print(regress(regression_cols, dependent_col, data))
+regress(regression_cols, dependent_col, data)
 
 
 
