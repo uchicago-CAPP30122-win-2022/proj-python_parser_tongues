@@ -11,7 +11,7 @@ for _, row in df_fips.iterrows():
 
 #Retrieve CDC data from API
 c.get_vax_data("cdc_data.csv")
-vax_data = pd.read_csv("cdc_data.csv")
+vax_data = pd.read_csv("cdc_data.csv", dtype=str)
 
 
 #Retrieve election data
@@ -24,14 +24,10 @@ for fips, (state, county) in fips_classifier.items():
 elect_data = elect_data.drop(columns=["State", "County"])
 
 #Merge datasets
-# Inner Merge
-df_1 = pd.merge(vax_data, elect_data, how='inner', on = "FIPS")
-df_1 = df_1.rename(columns={"State_x":"State","County_x":"County"})
 # Left Merge
-df_2 = pd.merge(vax_data, elect_data, how='left', on = "FIPS")
-df_2 = df_2.rename(columns={"State_x":"State","County_x":"County"})
+df = pd.merge(vax_data, elect_data, how='left', on = "FIPS")
+df = df.rename(columns={"State_x":"State","County_x":"County"})
 
 #Convert merged df's to csv
-df_1.to_csv('inner_merged.csv')
-df_2.to_csv('left_merged.csv')
+df.to_csv('data.csv')
     
