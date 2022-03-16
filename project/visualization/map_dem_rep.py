@@ -47,7 +47,7 @@ app.layout = html.Div([
 def display_choropleth(vax_type):
     
     if vax_type == "REP":
-        df = pd.read_csv('~/proj-python_parser_tongues/project/data/data.csv', dtype={"FIPS": str})
+        df = pd.read_csv('data/data.csv', dtype={"FIPS": str})
         df['FIPS']=df['FIPS'].apply(lambda x: '{0:0>5}'.format(x))
         df = df[df['DEM_WON']==0]
         min_bar = min(i for i in df[vax_type] if i >0)
@@ -69,7 +69,7 @@ def display_choropleth(vax_type):
 
         return fig
     elif vax_type == "DEM":
-        df = pd.read_csv('~/proj-python_parser_tongues/project/data/data.csv', dtype={"FIPS": str})
+        df = pd.read_csv('data/data.csv', dtype={"FIPS": str})
         df['FIPS']=df['FIPS'].apply(lambda x: '{0:0>5}'.format(x))
         df = df[df['DEM_WON']==1]
         min_bar = min(i for i in df[vax_type] if i >0)
@@ -92,7 +92,7 @@ def display_choropleth(vax_type):
         return fig
 
     else:
-        df = pd.read_csv('~/proj-python_parser_tongues/project/data/data.csv', dtype={"FIPS": str})
+        df = pd.read_csv('data/data.csv', dtype={"FIPS": str})
         df['FIPS']=df['FIPS'].apply(lambda x: '{0:0>5}'.format(x))
         min_bar = min(i for i in df[vax_type] if i >0)
 
