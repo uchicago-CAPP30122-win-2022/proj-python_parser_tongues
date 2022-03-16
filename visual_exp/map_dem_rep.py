@@ -15,7 +15,7 @@ app = dash.Dash()
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)
 
-df = pd.read_csv('~/Documents/UChicago/Q2_Winter_2022/capp30122_ACS/proj-python_parser_tongues/visual_exp/cdc_data.csv', dtype={"fips": str})
+df = pd.read_csv('~/Documents/UChicago/Q2_Winter_2022/capp30122_ACS/proj-python_parser_tongues/project/visual_exp/data.csv', dtype={"fips": str})
 
 min_bar = min(i for i in df['comp_vax_rate'] if i >0)
 
