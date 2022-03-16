@@ -26,7 +26,7 @@ elect_data = elect_data.drop(columns=["State", "County"])
 #Merge datasets
 # Left Merge
 df = pd.merge(vax_data, elect_data, how='left', on = "FIPS")
-df = df.rename(columns={"State_x":"State","County_x":"County"})
+df = df.rename(columns={"State_x":"State","County_x":"County"}).sort_values("FIPS")
 
 #Convert merged df's to csv
 df.to_csv('data.csv')
