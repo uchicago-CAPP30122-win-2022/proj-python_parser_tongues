@@ -6,7 +6,7 @@ install.sh -- creates virtual env and runs necessary packages
 
 requirements.txt -- package requirements for virtual environment
 
-data -- contains the project's data:
+data -- contains the project's data
 
 data.csv -- final merged file with CDC data, election results and controls
 merge.py -- code that merges datasets
