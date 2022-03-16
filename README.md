@@ -33,7 +33,7 @@ TEAM MEMBERS:
 
     4.7) cdc_api -- directory with code to extract data from CDC API and extracted data
 
-    4.8) election_crawler -- directory with election results crawler code
+    4.8) election_crawler -- directory with election crawler code
 
 
 5) visual_exp -- contains code for data visualization map
